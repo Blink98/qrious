@@ -6,19 +6,22 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { v4 as uuidv4 } from 'uuid';
 
 const theme = createTheme();
 
 const Form = () => {
   const history = useHistory();
+  const uid = uuidv4();
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
     const productDetails = {
+			uid: uid,
 			manufacturer: data.get("manufacturer"),
 			name: data.get("name"),
-			uid: data.get("uid"),
+			mrp: data.get("mrp"),
 			description: data.get("description"),
 		}
 		// eslint-disable-next-line no-console
@@ -67,11 +70,12 @@ const Form = () => {
 							margin="normal"
 							required
 							fullWidth
-							id="uid"
-							label="Product ID"
-							name="uid"
-							autoComplete="uid"
+							id="mrp"
+							label="MRP"
+							name="mrp"
+							autoComplete="mrp"
 							autoFocus
+              type="number"
 						/>
 
 						<TextField

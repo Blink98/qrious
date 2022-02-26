@@ -8,6 +8,7 @@ function App() {
 			<div className="App">
 				<Switch>
 					<Route path="/qrcode/:pid/:pname">
+					{/* QR Code generator */}
 						<QRcodeComp />
 					</Route>
 					{/* Home page */}

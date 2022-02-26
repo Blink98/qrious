@@ -1,12 +1,10 @@
 import { useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import QRcode from "qrcode.react";
-import "./qrcode.css";
 
 const QRcodeComp = () => {
 	let { pid, pname } = useParams();
   const history = useHistory();
-
 	const downloadQR = () => {
 		const canvas = document.getElementById("qrCode");
 		const pngUrl = canvas
@@ -27,7 +25,7 @@ const QRcodeComp = () => {
   
 
 	return (
-		<div className="qrcode">
+		<div>
 			<QRcode
 				id="qrCode"
 				value={pid}
