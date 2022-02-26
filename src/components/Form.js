@@ -1,27 +1,16 @@
 import { useEffect, useState } from 'react';
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-// import { makeStyles } from "@mui/styles";
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 const theme = createTheme();
-// const useStyles = makeStyles({
-// 	textarea: {
-// 		resize: "both",
-// 	},
-// });
 
 const Form = () => {
-	// const classes = useStyles();
+  const history = useHistory();
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
@@ -34,12 +23,13 @@ const Form = () => {
 		}
 		// eslint-disable-next-line no-console
 		console.log("productDetails>>>", productDetails);
+
+    history.push(`qrcode/${productDetails.uid}/${productDetails.name}`)
 	};
 
 	return (
 		<ThemeProvider theme={theme}>
 			<Container component="main" maxWidth="xs">
-				{/* <CssBaseline /> */}
 				<Box
 					sx={{
 						marginTop: 8,
