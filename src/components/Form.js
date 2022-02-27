@@ -20,7 +20,17 @@ const Form = () => {
 
 	const connectContract = async (productDetails) => {
 		let abi = Constants.ABI;
+
+		if (!window.ethereum) {
+			Swal.fire({
+				icon: "error",
+				title: "Oops... Wallet not found",
+				html: "Please install MetaMask and connect your account with our app",
+			});
+		}
+
 		const provider = new ethers.providers.Web3Provider(window.ethereum);
+
 		await provider.send("eth_requestAccounts", []);
 		const signer = provider.getSigner();
 		const userAddress = await signer.getAddress();
