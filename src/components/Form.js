@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import Button from "@mui/material/Button";
+import { useState } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -10,6 +9,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { v4 as uuidv4 } from "uuid";
 import Constants from "./Constants";
 import { ethers } from "ethers";
+import Swal from "sweetalert2";
 
 const theme = createTheme();
 
@@ -22,14 +22,37 @@ const Form = () => {
 		let abi = Constants.ABI;
 		const provider = new ethers.providers.Web3Provider(window.ethereum);
 		await provider.send("eth_requestAccounts", []);
+		const signer = provider.getSigner();
+		const userAddress = await signer.getAddress();
+		const hasBalance = await getBalance(provider, userAddress);
 
-		// let contractAddress = process.env.CONTRACT_ADDRESS;
-		const contractAddress = Constants.CONTRACT_ADDRESS;
+		if (hasBalance) {
+			const contractAddress = Constants.CONTRACT_ADDRESS;
 
-		let contract = new ethers.Contract(contractAddress, abi, provider);
-		console.log("contract>>>", contract);
+			let contract = new ethers.Contract(contractAddress, abi, provider);
+			console.log("contract>>>", contract);
 
-		await writeToContract(provider, contract, productDetails);
+			await writeToContract(provider, contract, productDetails);
+		}
+
+		return false;
+	};
+
+	const getBalance = async (provider, wallet) => {
+		let balance = await provider.getBalance(wallet);
+		// we use the code below to convert the balance from wei to eth
+		balance = ethers.utils.formatEther(balance);
+
+		if (balance <= 0) {
+			Swal.fire({
+				icon: "error",
+				title: "Oops... Insufficient balance in wallet",
+				html: "We recommend adding some tokens using <a href='https://faucet.polygon.technology' target='_bla'>Polygon Faucet</a>",
+			});
+
+			return false;
+		}
+		return true;
 	};
 
 	const writeToContract = async (provider, contract, productDetails) => {
@@ -65,25 +88,18 @@ const Form = () => {
 			mrp: data.get("mrp"),
 		};
 
-		document.getElementById("wallet").innerText =
-			"Your wallet is " + productDetails.uid;
-
-		await connectContract(productDetails);
+		const isConnected = await connectContract(productDetails);
 
 		setLoading(false);
-		// eslint-disable-next-line no-console
-		// console.log("productDetails>>>", productDetails);
 
-		history.push(`qrcode/${productDetails.uid}/${productDetails.name}`);
+		if (isConnected) {
+			history.push(`qrcode/${productDetails.uid}/${productDetails.name}`);
+		}
 	};
-
-	// useEffect(() => {
-	// }, []);
 
 	return (
 		<ThemeProvider theme={theme}>
 			<Container component="main" maxWidth="xs">
-				<div id="wallet"></div>
 				<Box
 					sx={{
 						marginTop: 8,

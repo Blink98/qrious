@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Form from "./components/Form";
 import QRcodeComp from "./components/QRcode";
+import "./app.css";
 
 function App() {
 	return (
@@ -8,7 +9,7 @@ function App() {
 			<div className="App">
 				<Switch>
 					<Route path="/qrcode/:pid/:pname">
-					{/* QR Code generator */}
+						{/* QR Code generator */}
 						<QRcodeComp />
 					</Route>
 					{/* Home page */}
