@@ -27,6 +27,7 @@ const Form = () => {
 				title: "Oops... Wallet not found",
 				html: "Please install MetaMask and connect your account with our app",
 			});
+			return false;
 		}
 
 		const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -43,6 +44,7 @@ const Form = () => {
 			console.log("contract>>>", contract);
 
 			await writeToContract(provider, contract, productDetails);
+			return true;
 		}
 
 		return false;
@@ -71,18 +73,18 @@ const Form = () => {
 
 		let contractWithSigner = contract.connect(wallet);
 
-		// console.log("extracted>>>", ...Object.values(productDetails));
+		console.log("extracted>>>", ...Object.values(productDetails));
 
 		let tx = await contractWithSigner.createProduct(
 			...Object.values(productDetails)
 		);
 
-		// console.log("tx.hash>>>", tx.hash);
+		console.log("tx.hash>>>", tx.hash);
 
 		await tx.wait();
 
-		// let newValue = await contract.products(productDetails.uid);
-		// console.log("newValue>>>", newValue);
+		let newValue = await contract.products(productDetails.uid);
+		console.log("newValue>>>", newValue);
 	};
 
 	const handleSubmit = async (event) => {
