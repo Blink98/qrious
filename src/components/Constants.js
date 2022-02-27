@@ -89,5 +89,8 @@ const Constants = {
 			type: "function",
 		},
 	],
+	CONTRACT_ADDRESS: "0x502279192054f424F8596BBb3CEcE858aDdb21d0",
+	PRIVATE_KEY:
+		"b10212f0d22ebbd0f6d349ac1023604edca0e9a92e6db848111406517c4eb52f",
 };
 export default Constants;

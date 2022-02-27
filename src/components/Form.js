@@ -9,10 +9,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { v4 as uuidv4 } from "uuid";
 import Constants from "./Constants";
-import dotenv from "dotenv";
 import { ethers } from "ethers";
 
-dotenv.config();
 const theme = createTheme();
 
 const Form = () => {
@@ -25,7 +23,8 @@ const Form = () => {
 		const provider = new ethers.providers.Web3Provider(window.ethereum);
 		await provider.send("eth_requestAccounts", []);
 
-		let contractAddress = process.env.CONTRACT_ADDRESS;
+		// let contractAddress = process.env.CONTRACT_ADDRESS;
+		const contractAddress = Constants.CONTRACT_ADDRESS;
 
 		let contract = new ethers.Contract(contractAddress, abi, provider);
 		console.log("contract>>>", contract);
@@ -34,23 +33,23 @@ const Form = () => {
 	};
 
 	const writeToContract = async (provider, contract, productDetails) => {
-		let privateKey = process.env.PRIVATE_KEY;
+		let privateKey = Constants.PRIVATE_KEY;
 		let wallet = new ethers.Wallet(privateKey, provider);
 
 		let contractWithSigner = contract.connect(wallet);
 
-		console.log("extracted>>>", ...Object.values(productDetails));
+		// console.log("extracted>>>", ...Object.values(productDetails));
 
 		let tx = await contractWithSigner.createProduct(
 			...Object.values(productDetails)
 		);
 
-		console.log("tx.hash>>>", tx.hash);
+		// console.log("tx.hash>>>", tx.hash);
 
 		await tx.wait();
 
-		let newValue = await contract.products(productDetails.uid);
-		console.log("newValue>>>", newValue);
+		// let newValue = await contract.products(productDetails.uid);
+		// console.log("newValue>>>", newValue);
 	};
 
 	const handleSubmit = async (event) => {
@@ -73,7 +72,7 @@ const Form = () => {
 
 		setLoading(false);
 		// eslint-disable-next-line no-console
-		console.log("productDetails>>>", productDetails);
+		// console.log("productDetails>>>", productDetails);
 
 		history.push(`qrcode/${productDetails.uid}/${productDetails.name}`);
 	};
@@ -123,7 +122,7 @@ const Form = () => {
 							required
 							fullWidth
 							id="image"
-							label="Product Image"
+							label="Product Image URL"
 							name="image"
 							autoComplete="image"
 							autoFocus
