@@ -18,7 +18,7 @@ const Form = () => {
 	const uid = uuidv4();
 	const [loading, setLoading] = useState(false);
 
-	const connectContract = async (productDetails) => {
+	const connectContract = async (productDetails, privateKey) => {
 		let abi = Constants.ABI;
 
 		if (!window.ethereum) {
@@ -43,7 +43,7 @@ const Form = () => {
 			let contract = new ethers.Contract(contractAddress, abi, provider);
 			console.log("contract>>>", contract);
 
-			await writeToContract(provider, contract, productDetails);
+			await writeToContract(provider, contract, productDetails, privateKey);
 			return true;
 		}
 
@@ -67,8 +67,12 @@ const Form = () => {
 		return true;
 	};
 
-	const writeToContract = async (provider, contract, productDetails) => {
-		let privateKey = Constants.PRIVATE_KEY;
+	const writeToContract = async (
+		provider,
+		contract,
+		productDetails,
+		privateKey
+	) => {
 		let wallet = new ethers.Wallet(privateKey, provider);
 
 		let contractWithSigner = contract.connect(wallet);
@@ -91,6 +95,7 @@ const Form = () => {
 		setLoading(true);
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
+		const privateKey = data.get("privateKey");
 		const productDetails = {
 			uid: uid,
 			name: data.get("name"),
@@ -100,7 +105,7 @@ const Form = () => {
 			mrp: data.get("mrp"),
 		};
 
-		const isConnected = await connectContract(productDetails);
+		const isConnected = await connectContract(productDetails, privateKey);
 
 		setLoading(false);
 
@@ -124,6 +129,16 @@ const Form = () => {
 						Product Details
 					</Typography>
 					<Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+						<TextField
+							margin="normal"
+							required
+							fullWidth
+							id="privateKey"
+							label="Private Key"
+							name="privateKey"
+							autoComplete="privateKey"
+							autoFocus
+						/>
 						<TextField
 							margin="normal"
 							required
