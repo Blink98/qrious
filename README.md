@@ -16,7 +16,7 @@ You may also see any lint errors in the console.
 
 ### The project is live at:
 
-https://qrious-web.herokuapp.com/
+https://qrious-82768.web.app/
 
 ### Workflow:
 
